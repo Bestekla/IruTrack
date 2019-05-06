@@ -8,8 +8,8 @@ function showItemTrackerFrame()
 end
 
 function populateItemList()
-    local sName, sLink, iRarity, iLevel, iMinLevel, sType, sSubType, iStackCount = GetItemInfo(19019);
-    IruTrack_item.link:SetText(sLink);
-    print(sLink);
+    local itemLink = select(2, GetItemInfo(19019));
+    IruTrack_item.link:SetText(itemLink);
+    print(itemLink);
     print('NOG EEN BIEM!');
 end
