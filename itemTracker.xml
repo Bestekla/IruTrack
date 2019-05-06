@@ -1,0 +1,79 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+    <Frame name="IruTrack_itemTracker" enableMouse="true" movable="true">
+        <Scripts>
+            <OnLoad>
+                showItemTrackerFrame()
+                self:RegisterForDrag("LeftButton")
+                populateItemList()
+            </OnLoad>
+            <OnDragStart>
+                self:StartMoving()
+            </OnDragStart>
+            <OnDragStop>
+                self:StopMovingOrSizing()
+            </OnDragStop>
+        </Scripts>
+        <Size x="150" y="256" />
+        <Anchors>
+            <Anchor point="CENTER" />
+        </Anchors>
+        <Layers>
+            <Layer level="ARTWORK">
+                <Texture setAllPoints="true">
+                    <Color r="0.1" g="0.1" b="0.1" a="0.0" />
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY">
+                <FontString name="$parent_title" inherits="GameFontNormal" text="item tracker"  >
+                    <Color r="1.0" g="1.0" b="1.0" a="1.0" />
+                    <Anchors>
+                        <Anchor point="TOP" />
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Frame name="$parent_content">
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="$parent_title" relativePoint="BOTTOM" />
+                    <Anchor point="LEFT" />
+                    <Anchor point="RIGHT" />
+                    <Anchor point="BOTTOM" />
+                </Anchors>
+                <Layers>
+                    <Layer level="ARTWORK">
+                        <Texture setAllPoints="true">
+                            <Color r="0.1" g="0.1" b="0.1" a="0.3" />
+                        </Texture>
+                    </Layer>
+                </Layers>
+            </Frame>
+            <Frame name="IruTrack_item">
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="$parent_content" relativePoint="TOP">
+                        <Offset y="-3" />
+                    </Anchor>
+                </Anchors>
+                <Size x="144" y="20" />
+                <Layers>
+                    <Layer level="ARTWORK">
+                        <Texture setAllPoints="true">
+                            <Color r="0.1" g="0.1" b="0.1" a="0.6" />
+                        </Texture>
+                    </Layer>
+                    <Layer level="OVERLAY">
+                        <FontString name="$parent_itemLink" inherits="GameFontWhiteTiny" parentKey="link" text="" >
+                            <Color r="1.0" g="1.0" b="1.0" a="1.0" />
+                            <Anchors>
+                                <Anchor point="CENTER" />
+                                <Anchor point="LEFT" >
+                                    <Offset x="2" />
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+            </Frame>
+        </Frames>
+    </Frame>
+</Ui>

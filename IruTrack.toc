@@ -1,0 +1,7 @@
+## Interface: 80100
+## Title: Iru's pre-BiS tracker
+## Notes: <3
+## Version: 1.0.0
+
+itemList.lua
+itemTracker.xml
