@@ -27,8 +27,8 @@ end
 
 function IruTrack_itemOnEnter(self, motion)
 	if self.link then
-		GameTooltip:SetOwner(self, “ANCHOR_TOPLEFT“);
-		GameTooltip:SetHyperlink(self.link);
+		GameTooltip:SetOwner(self, "ANCHOR_BOTTOM");
+		GameTooltip:SetHyperlink(self.link:GetText());
 		GameTooltip:Show();
 	end
 end
