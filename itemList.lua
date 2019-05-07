@@ -24,3 +24,15 @@ function populateItemList()
     print('NOG EEN BIEM!');
 
 end
+
+function IruTrack_itemOnEnter(self, motion)
+	if self.link then
+		GameTooltip:SetOwner(self, “ANCHOR_TOPLEFT“);
+		GameTooltip:SetHyperlink(self.link);
+		GameTooltip:Show();
+	end
+end
+
+function IruTrack_itemOnLeave(self, motion)
+	GameTooltip:Hide();
+end
