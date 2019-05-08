@@ -12,11 +12,11 @@
                 </Texture>
             </Layer>
             <Layer level="OVERLAY">
-                <FontString name="$parent_itemLink" inherits="GameFontWhiteTiny" parentKey="link" text="" >
+                <FontString name="$parent_itemLink" inherits="GameFontWhiteTiny" parentKey="link" text="">
                     <Color r="1.0" g="1.0" b="1.0" a="1.0" />
                     <Anchors>
                         <Anchor point="CENTER" />
-                        <Anchor point="LEFT" >
+                        <Anchor point="LEFT">
                             <Offset x="2" />
                         </Anchor>
                     </Anchors>
@@ -29,9 +29,8 @@
             <Script file="itemDB.lua" />
             <Script file="itemList.lua" />
             <OnLoad>
-                showItemTrackerFrame()
+                IruTrack_onLoad(self)
                 self:RegisterForDrag("LeftButton")
-                populateItemList()
             </OnLoad>
             <OnDragStart>
                 self:StartMoving()
@@ -39,6 +38,7 @@
             <OnDragStop>
                 self:StopMovingOrSizing()
             </OnDragStop>
+            <OnEvent function="IruTrack_handleEvent" />
         </Scripts>
         <Size x="150" y="256" />
         <Anchors>
@@ -51,7 +51,7 @@
                 </Texture>
             </Layer>
             <Layer level="OVERLAY">
-                <FontString name="$parent_title" inherits="GameFontNormal" text="item tracker"  >
+                <FontString name="$parent_title" inherits="GameFontNormal" text="item tracker">
                     <Color r="1.0" g="1.0" b="1.0" a="1.0" />
                     <Anchors>
                         <Anchor point="TOP" />
