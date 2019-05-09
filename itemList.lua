@@ -19,6 +19,15 @@ function IruTrack_createItemFrames()
     end
 end
 
+function IruTrack_findItem(itemID)
+	for k, v in ipairs(IruTrack_ItemsForChar) do
+		if v.itemID == itemID then
+			return v;
+		end
+	end
+	return nil;
+end
+
 function IruTrack_clearItemList()
     for k, v in pairs(IruTrack_itemList) do
     	v.link:SetText("");
@@ -30,7 +39,7 @@ function IruTrack_populateItemList(zone)
     
     IruTrack_clearItemList();
     local fnr = 1;
-    for k, v in pairs(IruTrack_itemDB) do
+    for k, v in ipairs(IruTrack_ItemsForChar) do
     	if v.zone == zone and v.tracked == true then
     		local itemLink = select(2,GetItemInfo(v.itemID));
     		if itemLink == nil then
@@ -44,7 +53,7 @@ function IruTrack_populateItemList(zone)
 end
 
 function IruTrack_updateItemInlist(itemID)
-	for k, v in pairs(IruTrack_itemList) do
+	for k, v in ipairs(IruTrack_itemList) do
 		if tonumber(IruTrack_itemList[k].link:GetText()) == itemID then
 			IruTrack_itemList[k].link:SetText(select(2,GetItemInfo(itemID)));
 		end
@@ -52,14 +61,41 @@ function IruTrack_updateItemInlist(itemID)
 end
 
 
-function IruTrack_copyToSavedVariables()
-	--localizedClass, englishClass, classIndex    = UnitClass("player");
+function IruTrack_initializeSavedVariables()
+	local class = select(2, UnitClass("player"));
+
+	for _, v in ipairs(IruTrack_itemDB) do
+		for i,j in ipairs(v.classes) do
+			if j == class then
+				table.insert(IruTrack_ItemsForChar, v);
+			end
+		end
+	end
 end
+
+function IruTrack_setAdditionalTooltipInfo(itemLink)
+	local itemID = select(2,strsplit(":", string.match(itemLink, "item[%-?%d:]+")));
+	local item = IruTrack_findItem(itemID);
+    local class = select(2, UnitClass("player"));
+
+	if item ~= nil then
+		if #items.classes > 1 then
+		    GameTooltip:AddLine("Item wanted also wanted by:");
+			for k, v ipairs(item.classes)
+				if v ~= class then
+					GameTooltip:AddLine(v);
+				end
+			end
+		end
+	end
+end
+
 
 function IruTrack_itemOnEnter(self, motion)
 	GameTooltip:SetOwner(self, "ANCHOR_BOTTOM");
 	if tonumber(self.link:GetText()) == nil then
 		GameTooltip:SetHyperlink(self.link:GetText());
+		IruTrack_setAdditionalTooltipInfo(self.link:GetText());
 	else
 		GameTooltip:AddLine("This item has not been seen on the server yet, so instead it's ID is shown here.", true);
 	end
@@ -80,6 +116,9 @@ function IruTrack_handleEvent(self, event,  ...)
     if event == "ADDON_LOADED" then
         if select(1, ...) == "IruTrack" then
             self:UnregisterEvent("ADDON_LOADED");
+            if IruTrack_ItemsForChar == nil then
+            	IruTrack_initializeSavedVariables();
+            end
             IruTrack_createItemFrames();
             IruTrack_showItemTrackerFrame();
             self:RegisterEvent("GET_ITEM_INFO_RECEIVED");

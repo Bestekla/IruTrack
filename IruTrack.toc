@@ -2,6 +2,7 @@
 ## Title: Iru's pre-BiS tracker
 ## Notes: <3
 ## Version: 1.0.0
+## SavedVariablesPerCharacter IruTrack_ItemsForChar
 
 
 itemDB.lua
