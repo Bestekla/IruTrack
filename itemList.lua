@@ -20,12 +20,13 @@ function IruTrack_createItemFrames()
 end
 
 function IruTrack_findItem(itemID)
+	local ret;
 	for k, v in ipairs(IruTrack_ItemsForChar) do
 		if v.itemID == itemID then
-			return v;
+			ret = v;
 		end
 	end
-	return nil;
+	return ret;
 end
 
 function IruTrack_clearItemList()
@@ -53,41 +54,50 @@ function IruTrack_populateItemList(zone)
 end
 
 function IruTrack_updateItemInlist(itemID)
-	for k, v in ipairs(IruTrack_itemList) do
-		if tonumber(IruTrack_itemList[k].link:GetText()) == itemID then
-			IruTrack_itemList[k].link:SetText(select(2,GetItemInfo(itemID)));
-		end
-	end
+    for k, v in ipairs(IruTrack_itemList) do
+        if tonumber(IruTrack_itemList[k].link:GetText()) == itemID then
+            IruTrack_itemList[k].link:SetText(select(2,GetItemInfo(itemID)));
+        end
+    end
 end
 
 
 function IruTrack_initializeSavedVariables()
-	local class = select(2, UnitClass("player"));
-
-	for _, v in ipairs(IruTrack_itemDB) do
-		for i,j in ipairs(v.classes) do
-			if j == class then
-				table.insert(IruTrack_ItemsForChar, v);
-			end
-		end
-	end
+    local class = select(2, UnitClass("player"));
+    IruTrack_ItemsForChar = {};
+    for _, v in ipairs(IruTrack_itemDB) do
+        for i,j in ipairs(v.classes) do
+            if j == class then
+                table.insert(IruTrack_ItemsForChar, v);
+            end
+        end
+    end
 end
 
 function IruTrack_setAdditionalTooltipInfo(itemLink)
-	local itemID = select(2,strsplit(":", string.match(itemLink, "item[%-?%d:]+")));
-	local item = IruTrack_findItem(itemID);
+    local itemID = select(2,strsplit(":", string.match(itemLink, "item[%-?%d:]+")));
+    itemID = tonumber(itemID);
+    local item = IruTrack_findItem(itemID);
     local class = select(2, UnitClass("player"));
+    local otherClasses = "";
 
-	if item ~= nil then
-		if #items.classes > 1 then
-		    GameTooltip:AddLine("Item wanted also wanted by:");
-			for k, v ipairs(item.classes)
-				if v ~= class then
-					GameTooltip:AddLine(v);
-				end
-			end
-		end
-	end
+    if item ~= nil then
+        if item.source == "drop" then
+            GameTooltip:AddLine("Dropped by:");
+        elseif item.source == "quest" then
+            GameTooltip:AddLine("Reward from:");
+        end
+        --competition "warning"
+        if #item.classes > 1 then
+            GameTooltip:AddLine("Item also wanted by:");
+            for k, v in ipairs(item.classes) do
+                if v ~= class then
+                    otherClasses = otherClasses .. v .. " ";
+                end
+            end
+            GameTooltip:AddLine(otherClasses);
+        end
+    end
 end
 
 
