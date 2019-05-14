@@ -6,5 +6,5 @@
 
 
 itemDB.lua
-itemList.lua
 itemTracker.xml
+itemList.lua

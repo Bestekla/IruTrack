@@ -24,12 +24,9 @@
             </Layer>
         </Layers>
     </Frame>
-    <Frame name="IruTrack_itemTracker" enableMouse="true" movable="true">
+    <Frame name="IruTrack_itemTrackerTemplate" enableMouse="true" movable="true" virtual="true">
         <Scripts>
-            <Script file="itemDB.lua" />
-            <Script file="itemList.lua" />
             <OnLoad>
-                IruTrack_onLoad(self)
                 self:RegisterForDrag("LeftButton")
             </OnLoad>
             <OnDragStart>
@@ -38,7 +35,6 @@
             <OnDragStop>
                 self:StopMovingOrSizing()
             </OnDragStop>
-            <OnEvent function="IruTrack_handleEvent" />
         </Scripts>
         <Size x="150" y="256" />
         <Anchors>

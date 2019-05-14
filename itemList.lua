@@ -1,7 +1,12 @@
 local IruTrack_itemList = {}
 
+--init the tracker frame
+local itemTracker = CreateFrame("Frame", "itemTrackerFrame", UIParent, "IruTrack_itemTrackerTemplate");
+itemTracker:SetScript("OnEvent", function(self, event, ...) return self[event] and self[event](self, ...) end)
+itemTracker:RegisterEvent("ADDON_LOADED");
+
 function IruTrack_showItemTrackerFrame()
-    IruTrack_itemTracker:Show();
+    itemTracker:Show();
 end
 
 function IruTrack_createItemFrames()
@@ -9,11 +14,11 @@ function IruTrack_createItemFrames()
 	for fnr=1,10 do
         local item = CreateFrame("Frame", "IruTrack_item" .. fnr, self, "IruTrack_itemTemplate");
         if fnr == 1 then
-            item:SetPoint("TOP", "IruTrack_itemTracker_content", "TOP", 0, -3);
+            item:SetPoint("TOP", "itemTrackerFrame_content", "TOP", 0, -3);
         else
             item:SetPoint("TOP", "IruTrack_item" .. fnr-1, "BOTTOM", 0, -3);
         end
-        item:SetParent("IruTrack_itemTracker_content");
+        item:SetParent("itemTrackerFrame_content");
         item:Hide();
         IruTrack_itemList[fnr] = item;
     end
@@ -117,31 +122,28 @@ function IruTrack_itemOnLeave(self, motion)
 	GameTooltip:Hide();
 end
 
-function IruTrack_onLoad(self)
-    self:RegisterEvent("ADDON_LOADED");
-end
  
-function IruTrack_handleEvent(self, event,  ...)
-
-    if event == "ADDON_LOADED" then
-        if select(1, ...) == "IruTrack" then
-            self:UnregisterEvent("ADDON_LOADED");
-            if IruTrack_ItemsForChar == nil then
-            	IruTrack_initializeSavedVariables();
-            end
-            IruTrack_createItemFrames();
-            IruTrack_showItemTrackerFrame();
-            self:RegisterEvent("GET_ITEM_INFO_RECEIVED");
-            self:RegisterEvent("ZONE_CHANGED_NEW_AREA");
-            IruTrack_populateItemList(GetRealZoneText());
+function itemTracker:ADDON_LOADED(name)
+    if name == "IruTrack" then
+        self:UnregisterEvent("ADDON_LOADED");
+        if IruTrack_ItemsForChar == nil then
+        	IruTrack_initializeSavedVariables();
         end
-    end
-    if event == "ZONE_CHANGED_NEW_AREA" then
+        IruTrack_createItemFrames();
+        IruTrack_showItemTrackerFrame();
+        self:RegisterEvent("GET_ITEM_INFO_RECEIVED");
+        self:RegisterEvent("ZONE_CHANGED_NEW_AREA");
         IruTrack_populateItemList(GetRealZoneText());
     end
-    if event == "GET_ITEM_INFO_RECEIVED" then
-    	if select(2, ...) == true then
-    		IruTrack_updateItemInlist(select(1, ...));
-    	end
+end
+
+
+function itemTracker:ZONE_CHANGED_NEW_AREA()
+    IruTrack_populateItemList(GetRealZoneText());
+end
+
+function itemTracker:GET_ITEM_INFO_RECEIVED(itemID, success)
+    if success == true then
+        IruTrack_updateItemInlist(itemID);
     end
 end
