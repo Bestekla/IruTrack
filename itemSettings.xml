@@ -1,0 +1,106 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+    <Button name="IruTrack_itemButtonTemplate" virtual="true">
+        <Scripts>
+            <OnEnter function="IruTrack_itemOnEnter" />
+            <OnLeave function="IruTrack_itemOnLeave" />
+        </Scripts>
+        <Size x="200" y="15" />
+        <Layers>
+            <Layer level="ARTWORK">
+                <Texture setAllPoints="true">
+                    <Color r="0.1" g="0.1" b="0.1" a="0.6" />
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY">
+                <FontString name="$parent_itemLink" inherits="GameFontWhiteTiny" parentKey="link" text="">
+                    <Color r="1.0" g="1.0" b="1.0" a="1.0" />
+                    <Anchors>
+                        <Anchor point="CENTER" />
+                        <Anchor point="LEFT">
+                            <Offset x="2" />
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Button>
+    <Frame name="IruTrack_itemSettingsTemplate" enableMouse="true" enableMouseWheel="true" movable="true" virtual="true">
+        <Scripts>
+            <OnLoad>
+                self:RegisterForDrag("LeftButton")
+            </OnLoad>
+            <OnDragStart>
+                self:StartMoving()
+            </OnDragStart>
+            <OnDragStop>
+                self:StopMovingOrSizing()
+            </OnDragStop>
+        </Scripts>
+        <Size x="600" y="400" />
+        <Anchors>
+            <Anchor point="CENTER" />
+        </Anchors>
+        <Layers>
+            <Layer level="ARTWORK">
+                <Texture setAllPoints="true">
+                    <Color r="0.1" g="0.1" b="0.1" a="0.0" />
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY">
+                <FontString name="$parent_title" inherits="GameFontNormal" text="item settings">
+                    <Color r="1.0" g="1.0" b="1.0" a="1.0" />
+                    <Anchors>
+                        <Anchor point="TOPLEFT" />
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Frame name="$parent_content" parentKey="content">
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="$parent_title" relativePoint="BOTTOM">
+                        <Offset y="-2" />
+                    </Anchor>
+                    <Anchor point="LEFT" />
+                    <Anchor point="RIGHT" />
+                    <Anchor point="BOTTOM" />
+                </Anchors>
+                <Layers>
+                    <Layer level="ARTWORK">
+                        <Texture setAllPoints="true">
+                            <Color r="0.1" g="0.1" b="0.1" a="0.3" />
+                        </Texture>
+                    </Layer>
+                </Layers>
+                <Frames>
+                    <ScrollFrame name="$parent_itemListScrollFrame" parentKey="list" enableMouse="true" enableMouseWheel="true">
+                        <Size x="200" />
+                        <ScrollChild>
+                            <Frame name="$parent_itemListScrollChild" parentKey="items">
+                                <Size x="200" y="1000" />
+                                <Layers>
+                                    <Layer level="ARTWORK">
+                                    <!--    <Texture setAllPoints="true">
+                                            <Color r="0.0" g="1.0" b="0" a="1.0" />
+                                        </Texture> -->
+                                    </Layer>
+                                </Layers>
+                            </Frame>
+                        </ScrollChild>
+                        <Anchors>
+                            <Anchor point="TOP" />
+                            <Anchor point="LEFT" />
+                        </Anchors>
+                        <Layers>
+                            <Layer level="ARTWORK">
+                                <Texture setAllPoints="true">
+                                    <Color r="0.1" g="0.1" b="0.1" a="0.7" />
+                                </Texture>
+                            </Layer>
+                        </Layers>
+                    </ScrollFrame>
+                </Frames>
+            </Frame>
+        </Frames>
+    </Frame>
+</Ui>

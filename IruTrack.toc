@@ -8,3 +8,5 @@
 itemDB.lua
 itemTracker.xml
 itemList.lua
+itemSettings.xml
+itemSettings.lua

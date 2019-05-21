@@ -5,11 +5,7 @@ local itemTracker = CreateFrame("Frame", "itemTrackerFrame", UIParent, "IruTrack
 itemTracker:SetScript("OnEvent", function(self, event, ...) return self[event] and self[event](self, ...) end)
 itemTracker:RegisterEvent("ADDON_LOADED");
 
-function IruTrack_showItemTrackerFrame()
-    itemTracker:Show();
-end
-
-function IruTrack_createItemFrames()
+function itemTracker:createItemFrames()
 
 	for fnr=1,10 do
         local item = CreateFrame("Frame", "IruTrack_item" .. fnr, self, "IruTrack_itemTemplate");
@@ -24,7 +20,7 @@ function IruTrack_createItemFrames()
     end
 end
 
-function IruTrack_findItem(itemID)
+function itemTracker:findItem(itemID)
 	local ret;
 	for k, v in ipairs(IruTrack_ItemsForChar) do
 		if v.itemID == itemID then
@@ -34,23 +30,20 @@ function IruTrack_findItem(itemID)
 	return ret;
 end
 
-function IruTrack_clearItemList()
+function itemTracker:clearItemList()
     for k, v in pairs(IruTrack_itemList) do
     	v.link:SetText("");
     	v:Hide();
     end
 end
 
-function IruTrack_populateItemList(zone)
+function itemTracker:populateItemList(zone)
     
-    IruTrack_clearItemList();
+    itemTracker:clearItemList();
     local fnr = 1;
     for k, v in ipairs(IruTrack_ItemsForChar) do
     	if v.zone == zone and v.tracked == true then
-    		local itemLink = select(2,GetItemInfo(v.itemID));
-    		if itemLink == nil then
-    			itemLink = v.itemID;
-    		end
+    		local itemLink = select(2,GetItemInfo(v.itemID)) or v.itemID;
     		IruTrack_itemList[fnr].link:SetText(itemLink);
     		IruTrack_itemList[fnr]:Show();
     		fnr = fnr + 1;
@@ -58,7 +51,7 @@ function IruTrack_populateItemList(zone)
     end
 end
 
-function IruTrack_updateItemInlist(itemID)
+function itemTracker:updateItemInlist(itemID)
     for k, v in ipairs(IruTrack_itemList) do
         if tonumber(IruTrack_itemList[k].link:GetText()) == itemID then
             IruTrack_itemList[k].link:SetText(select(2,GetItemInfo(itemID)));
@@ -79,10 +72,10 @@ function IruTrack_initializeSavedVariables()
     end
 end
 
-function IruTrack_setAdditionalTooltipInfo(itemLink)
+function itemTracker:setAdditionalTooltipInfo(itemLink)
     local itemID = select(2,strsplit(":", string.match(itemLink, "item[%-?%d:]+")));
     itemID = tonumber(itemID);
-    local item = IruTrack_findItem(itemID);
+    local item = itemTracker:findItem(itemID);
     local class = select(2, UnitClass("player"));
     local otherClasses = "";
 
@@ -110,7 +103,7 @@ function IruTrack_itemOnEnter(self, motion)
 	GameTooltip:SetOwner(self, "ANCHOR_BOTTOM");
 	if tonumber(self.link:GetText()) == nil then
 		GameTooltip:SetHyperlink(self.link:GetText());
-		IruTrack_setAdditionalTooltipInfo(self.link:GetText());
+		itemTracker:setAdditionalTooltipInfo(self.link:GetText());
 	else
 		GameTooltip:AddLine("This item has not been seen on the server yet, so instead it's ID is shown here.", true);
 	end
@@ -129,21 +122,21 @@ function itemTracker:ADDON_LOADED(name)
         if IruTrack_ItemsForChar == nil then
         	IruTrack_initializeSavedVariables();
         end
-        IruTrack_createItemFrames();
-        IruTrack_showItemTrackerFrame();
+        itemTracker:createItemFrames()
+        itemTracker:Show();
         self:RegisterEvent("GET_ITEM_INFO_RECEIVED");
         self:RegisterEvent("ZONE_CHANGED_NEW_AREA");
-        IruTrack_populateItemList(GetRealZoneText());
+        itemTracker:populateItemList(GetRealZoneText());
     end
 end
 
 
 function itemTracker:ZONE_CHANGED_NEW_AREA()
-    IruTrack_populateItemList(GetRealZoneText());
+    itemTracker:populateItemList(GetRealZoneText());
 end
 
 function itemTracker:GET_ITEM_INFO_RECEIVED(itemID, success)
     if success == true then
-        IruTrack_updateItemInlist(itemID);
+        itemTracker:updateItemInlist(itemID);
     end
 end
