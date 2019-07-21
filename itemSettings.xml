@@ -73,7 +73,13 @@
                     </Layer>
                 </Layers>
                 <Frames>
+                    <Slider name="$parent_slider" parentKey="scrollbar" inherits="UIPanelScrollBarTemplate">
+                        <Size y="16" />
+                    </Slider>
                     <ScrollFrame name="$parent_itemListScrollFrame" parentKey="list" enableMouse="true" enableMouseWheel="true">
+                        <Scripts>
+                            <OnMouseWheel function="itemSettings_OnMouseWheel" />
+                        </Scripts>
                         <Size x="200" />
                         <ScrollChild>
                             <Frame name="$parent_itemListScrollChild" parentKey="items">
