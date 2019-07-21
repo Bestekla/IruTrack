@@ -1,13 +1,5 @@
 local itemlist = {};
 
-local itemSettings = CreateFrame("Frame", "itemSettingsFrame", UIParent, "IruTrack_itemSettingsTemplate");
-itemSettings:SetScript("OnEvent", function(self, event, ...) return self[event] and self[event](self, ...) end)
-itemSettings:Show();
-itemSettings:RegisterEvent("ADDON_LOADED");
-itemSettings.content.list:SetScript("OnMouseWheel", itemSettings_OnMouseWheel);
-itemSettings.content.list:EnableMouseWheel(true);
-
-
 function itemSettings_OnMouseWheel(self, delta)
     print("scroll!!");
     local newValue = self:GetVerticalScroll() - (delta * 20);
@@ -19,7 +11,28 @@ function itemSettings_OnMouseWheel(self, delta)
     end
     
     self:SetVerticalScroll(newValue);
+    scrollbar:SetValue(newValue);
 end
+
+
+local itemSettings = CreateFrame("Frame", "itemSettingsFrame", UIParent, "IruTrack_itemSettingsTemplate");
+itemSettings:SetScript("OnEvent", function(self, event, ...) return self[event] and self[event](self, ...) end)
+itemSettings:Show();
+itemSettings:RegisterEvent("ADDON_LOADED");
+itemSettings.content.list:SetScript("OnMouseWheel", itemSettings_OnMouseWheel);
+itemSettings.content.list:EnableMouseWheel(true);
+
+local scrollbar = CreateFrame("Slider", "scrollbartest" ,itemSettings.content.list,"UIPanelScrollBarTemplate");
+scrollbar:Show();
+        scrollbar:SetPoint("TOPLEFT",itemSettings.content.list,"TOPRIGHT",0,-16)
+        scrollbar:SetPoint("BOTTOMLEFT",itemSettings.content.list,"BOTTOMRIGHT",0,16)
+        scrollbar:SetScript("OnValueChanged", itemSettings_OnMouseWheel)
+        scrollbar:SetMinMaxValues(0,1000)
+        scrollbar:SetValueStep(1)
+        scrollbar:SetValue(0)
+scrollbar:SetWidth(16)
+
+
 
 function itemSettings:createItemButtons()
 
